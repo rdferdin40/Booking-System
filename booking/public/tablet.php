@@ -6,7 +6,7 @@
  * Usage: /public/tablet.php?room_id=1
  *
  * @package ConferenceBooking
- * @version 2.1.0 - Hybrid Modern Pro with Night Mode
+ * @version 2.2.0 - Hybrid Modern Pro with Night Mode & Date Selector
  */
 
 require_once __DIR__ . '/../config/config.php';
@@ -952,9 +952,13 @@ $currentHour = (int)date('G');
             <div class="modal-header">Book <?php echo e($room['name']); ?></div>
             <form id="bookingForm" method="POST" action="create.php">
                 <input type="hidden" name="room_id" value="<?php echo $roomId; ?>">
-                <input type="hidden" name="date" value="<?php echo $date; ?>">
                 <input type="hidden" id="start_time" name="start_time">
                 <input type="hidden" id="end_time" name="end_time">
+
+                <div class="form-group">
+                    <label>Date *</label>
+                    <input type="date" id="booking_date" name="date" class="form-control" value="<?php echo $date; ?>" min="<?php echo $date; ?>" required>
+                </div>
 
                 <div class="form-group">
                     <label>Start Time *</label>
@@ -1105,7 +1109,7 @@ $currentHour = (int)date('G');
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
             const startTimeValue = document.getElementById('start_time_display').value;
             const duration = parseInt(document.getElementById('duration').value);
-            const date = '<?php echo $date; ?>';
+            const date = document.getElementById('booking_date').value;
             const startDateTime = date + ' ' + startTimeValue + ':00';
 
             const start = new Date(startDateTime);
