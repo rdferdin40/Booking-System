@@ -6,7 +6,7 @@
  * Usage: /public/tablet.php?room_id=1
  *
  * @package ConferenceBooking
- * @version 2.3.0 - Hybrid Modern Pro with Night Mode, Date Selector & QR Code
+ * @version 2.4.0 - Fully Responsive for All Tablet Sizes
  */
 
 require_once __DIR__ . '/../config/config.php';
@@ -833,14 +833,197 @@ $currentHour = (int)date('G');
             50% { opacity: 1; }
         }
 
-        /* Responsive */
+        /* Responsive Design for All Tablet Sizes */
+
+        /* Large tablets and above (12"+ iPad Pro, Galaxy Tab S8+) - Default styles above work well */
+
+        /* Medium tablets (10-11" iPad, Galaxy Tab S, Fire HD 10) */
         @media (max-width: 1200px) {
+            .tablet-container {
+                padding: 24px;
+                gap: 16px;
+            }
             .timeline-sidebar {
-                width: 220px;
+                width: 240px;
+                padding: 24px 16px;
+            }
+            .main-card {
+                padding: 32px;
             }
             .room-name {
+                font-size: 40px;
+            }
+            .current-time {
+                font-size: 64px;
+            }
+            .status-text {
+                font-size: 56px;
+            }
+            .meeting-title {
+                font-size: 28px;
+            }
+            .progress-circle {
+                width: 180px;
+                height: 180px;
+            }
+            .progress-circle svg {
+                width: 180px;
+                height: 180px;
+            }
+            .progress-minutes {
+                font-size: 42px;
+            }
+        }
+
+        /* Small tablets (7-8" Fire 7/8, Galaxy Tab A 8") */
+        @media (max-width: 900px) {
+            .tablet-container {
+                padding: 16px;
+                gap: 12px;
+            }
+            .timeline-sidebar {
+                width: 200px;
+                padding: 20px 12px;
+            }
+            .timeline-current-time {
+                font-size: 28px;
+            }
+            .timeline-title {
+                font-size: 20px;
+            }
+            .main-card {
+                padding: 24px;
+            }
+            .room-name {
+                font-size: 32px;
+            }
+            .room-details {
+                font-size: 16px;
+            }
+            .current-time {
+                font-size: 48px;
+            }
+            .status-text {
+                font-size: 40px;
+            }
+            .status-badge {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+            .meeting-title {
+                font-size: 24px;
+            }
+            .meeting-organizer {
+                font-size: 20px;
+            }
+            .meeting-time {
+                font-size: 22px;
+            }
+            .progress-circle {
+                width: 150px;
+                height: 150px;
+            }
+            .progress-circle svg {
+                width: 150px;
+                height: 150px;
+            }
+            .progress-minutes {
                 font-size: 36px;
             }
+            .next-meeting-title {
+                font-size: 20px;
+            }
+            .next-meeting-time {
+                font-size: 18px;
+            }
+            .book-btn {
+                font-size: 20px;
+                padding: 16px;
+            }
+            .control-buttons {
+                top: 16px;
+                right: 16px;
+                gap: 8px;
+            }
+            .control-btn {
+                width: 50px;
+                height: 50px;
+            }
+            .control-btn .icon {
+                font-size: 24px;
+            }
+            .modal-content {
+                padding: 32px;
+                max-width: 90%;
+            }
+            .modal-header {
+                font-size: 28px;
+            }
+            .form-control {
+                font-size: 16px;
+                padding: 14px;
+            }
+        }
+
+        /* Very small tablets (landscape phones, 6-7" devices) */
+        @media (max-width: 700px) {
+            .tablet-container {
+                padding: 12px;
+            }
+            .timeline-sidebar {
+                display: none; /* Hide timeline on very small screens */
+            }
+            .main-card {
+                padding: 20px;
+            }
+            .room-name {
+                font-size: 28px;
+            }
+            .current-time {
+                font-size: 40px;
+            }
+            .status-text {
+                font-size: 32px;
+            }
+            .book-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .qr-code-container img {
+                width: 240px;
+                height: 240px;
+            }
+            .control-btn {
+                width: 44px;
+                height: 44px;
+            }
+            .control-btn .icon {
+                font-size: 20px;
+            }
+        }
+
+        /* Portrait orientation - stack vertically */
+        @media (orientation: portrait) {
+            .tablet-container {
+                flex-direction: column;
+            }
+            .timeline-sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 160px;
+                padding: 16px 20px;
+                order: -1; /* Move timeline to top */
+            }
+            .timeline {
+                display: none; /* Hide detailed timeline in portrait */
+            }
+            .timeline-current-time {
+                display: none; /* Already shown in main area */
+            }
+            .main-card {
+                flex: 1;
+            }
+
+            /* Adjust for portrait mode */
             .current-time {
                 font-size: 56px;
             }
@@ -849,16 +1032,64 @@ $currentHour = (int)date('G');
             }
         }
 
-        @media (orientation: portrait) {
-            .tablet-container {
-                flex-direction: column;
-            }
+        /* Portrait + Small screen (iPad Mini portrait, small Android tablets) */
+        @media (orientation: portrait) and (max-width: 900px) {
             .timeline-sidebar {
-                width: 100%;
-                height: 200px;
+                padding: 12px 16px;
             }
-            .timeline {
-                display: none;
+            .timeline-title {
+                font-size: 18px;
+            }
+            .room-name {
+                font-size: 28px;
+            }
+            .current-time {
+                font-size: 42px;
+            }
+            .status-text {
+                font-size: 36px;
+            }
+            .book-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            .book-btn {
+                padding: 14px;
+                font-size: 18px;
+            }
+        }
+
+        /* Landscape mode optimizations */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .tablet-container {
+                padding: 12px;
+            }
+            .main-card {
+                padding: 20px;
+            }
+            .status-section {
+                margin: 20px 0;
+            }
+            .current-time {
+                font-size: 48px;
+                margin-bottom: 12px;
+            }
+            .status-text {
+                font-size: 40px;
+                margin-bottom: 16px;
+            }
+            .progress-circle {
+                width: 140px;
+                height: 140px;
+            }
+            .progress-circle svg {
+                width: 140px;
+                height: 140px;
+            }
+            .meeting-info,
+            .next-meeting {
+                padding: 16px;
+                margin-bottom: 16px;
             }
         }
     </style>
