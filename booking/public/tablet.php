@@ -6,7 +6,7 @@
  * Usage: /public/tablet.php?room_id=1
  *
  * @package ConferenceBooking
- * @version 2.2.0 - Hybrid Modern Pro with Night Mode & Date Selector
+ * @version 2.3.0 - Hybrid Modern Pro with Night Mode, Date Selector & QR Code
  */
 
 require_once __DIR__ . '/../config/config.php';
@@ -680,12 +680,17 @@ $currentHour = (int)date('G');
             margin-bottom: 12px;
         }
 
-        /* Night Mode Toggle */
-        .night-mode-toggle {
+        /* Control Buttons */
+        .control-buttons {
             position: fixed;
             top: 30px;
             right: 30px;
             z-index: 1500;
+            display: flex;
+            gap: 12px;
+        }
+
+        .control-btn {
             background: rgba(0, 0, 0, 0.2);
             backdrop-filter: blur(10px);
             border: none;
@@ -700,22 +705,86 @@ $currentHour = (int)date('G');
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        .night-mode-toggle:hover {
+        .control-btn:hover {
             background: rgba(0, 0, 0, 0.3);
             transform: scale(1.05);
         }
 
-        .night-mode-toggle:active {
+        .control-btn:active {
             transform: scale(0.95);
         }
 
-        .toggle-icon {
+        .control-btn .icon {
             font-size: 28px;
             transition: transform 0.3s ease;
         }
 
-        body.night-mode .toggle-icon {
+        body.night-mode .control-btn.night-mode-toggle .icon {
             transform: rotate(180deg);
+        }
+
+        /* QR Code Modal */
+        .qr-modal {
+            display: none;
+            position: fixed;
+            z-index: 1500;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-modal.active {
+            display: flex;
+        }
+
+        .qr-modal-content {
+            background: var(--modal-bg);
+            padding: 50px;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            transition: background-color 0.3s ease;
+        }
+
+        .qr-modal-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--card-text);
+            margin-bottom: 16px;
+        }
+
+        .qr-modal-subtitle {
+            font-size: 18px;
+            color: var(--card-text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .qr-code-container {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            display: inline-block;
+            margin-bottom: 24px;
+        }
+
+        .qr-code-container img {
+            display: block;
+            width: 300px;
+            height: 300px;
+        }
+
+        .qr-url {
+            font-size: 16px;
+            color: var(--card-text-secondary);
+            font-weight: 500;
+            margin-bottom: 24px;
+            font-family: 'Monaco', 'Courier New', monospace;
         }
 
         /* Screensaver */
@@ -795,10 +864,15 @@ $currentHour = (int)date('G');
     </style>
 </head>
 <body>
-    <!-- Night Mode Toggle -->
-    <button class="night-mode-toggle" id="nightModeToggle" aria-label="Toggle night mode">
-        <span class="toggle-icon">🌙</span>
-    </button>
+    <!-- Control Buttons -->
+    <div class="control-buttons">
+        <button class="control-btn qr-btn" id="qrButton" aria-label="Show QR code">
+            <span class="icon">📱</span>
+        </button>
+        <button class="control-btn night-mode-toggle" id="nightModeToggle" aria-label="Toggle night mode">
+            <span class="icon">🌙</span>
+        </button>
+    </div>
 
     <!-- Main Container -->
     <div class="tablet-container <?php echo $isAvailable ? 'available' : 'occupied'; ?>">
@@ -1021,6 +1095,21 @@ $currentHour = (int)date('G');
         <div class="screensaver-tap">Tap to Book</div>
     </div>
 
+    <!-- QR Code Modal -->
+    <div class="qr-modal" id="qrModal">
+        <div class="qr-modal-content">
+            <div class="qr-modal-title">Book from Your Phone</div>
+            <div class="qr-modal-subtitle">Scan this QR code to access the booking system</div>
+            <div class="qr-code-container">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://ladcportal.com/booking"
+                     alt="QR Code for booking system"
+                     loading="lazy">
+            </div>
+            <div class="qr-url">ladcportal.com/booking</div>
+            <button type="button" class="btn btn-secondary" onclick="closeQrModal()">CLOSE</button>
+        </div>
+    </div>
+
     <script>
         const roomId = <?php echo $roomId; ?>;
         const screensaverEnabled = <?php echo $screensaverEnabled ? 'true' : 'false'; ?>;
@@ -1035,7 +1124,7 @@ $currentHour = (int)date('G');
             localStorage.setItem('nightMode', isNightMode ? 'true' : 'false');
 
             // Update toggle icon
-            const toggleIcon = document.querySelector('.toggle-icon');
+            const toggleIcon = document.querySelector('.night-mode-toggle .icon');
             toggleIcon.textContent = isNightMode ? '☀️' : '🌙';
         }
 
@@ -1044,8 +1133,19 @@ $currentHour = (int)date('G');
             const nightMode = localStorage.getItem('nightMode');
             if (nightMode === 'true') {
                 document.body.classList.add('night-mode');
-                document.querySelector('.toggle-icon').textContent = '☀️';
+                document.querySelector('.night-mode-toggle .icon').textContent = '☀️';
             }
+        }
+
+        // QR Modal functions
+        function openQrModal() {
+            document.getElementById('qrModal').classList.add('active');
+            resetScreensaver();
+        }
+
+        function closeQrModal() {
+            document.getElementById('qrModal').classList.remove('active');
+            resetScreensaver();
         }
 
         // Update all clocks
@@ -1129,6 +1229,16 @@ $currentHour = (int)date('G');
 
             // Night mode toggle event
             document.getElementById('nightModeToggle').addEventListener('click', toggleNightMode);
+
+            // QR button event
+            document.getElementById('qrButton').addEventListener('click', openQrModal);
+
+            // Close QR modal on backdrop click
+            document.getElementById('qrModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeQrModal();
+                }
+            });
 
             updateTime();
             setInterval(updateTime, 1000);
