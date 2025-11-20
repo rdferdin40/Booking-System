@@ -283,7 +283,8 @@ DELIMITER ;
 -- ============================================================
 
 -- Additional composite indexes for common queries
-CREATE INDEX idx_room_date ON reservations(room_id, DATE(start_time));
+-- Note: Using room_id + start_time (without DATE function for compatibility)
+CREATE INDEX idx_room_start ON reservations(room_id, start_time);
 CREATE INDEX idx_department ON reservations(department);
 CREATE INDEX idx_fullname ON reservations(full_name);
 
