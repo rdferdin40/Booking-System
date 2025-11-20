@@ -6,7 +6,7 @@
  * Usage: /public/tablet.php?room_id=1
  *
  * @package ConferenceBooking
- * @version 2.4.0 - Fully Responsive for All Tablet Sizes
+ * @version 2.5.0 - Clean Interface, Fully Responsive
  */
 
 require_once __DIR__ . '/../config/config.php';
@@ -256,19 +256,6 @@ $currentHour = (int)date('G');
             color: var(--card-text);
             margin-bottom: 12px;
             line-height: 1.2;
-        }
-
-        .room-details {
-            display: flex;
-            gap: 20px;
-            font-size: 20px;
-            color: var(--card-text-secondary);
-        }
-
-        .room-detail-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         /* Status Section */
@@ -897,9 +884,6 @@ $currentHour = (int)date('G');
             .room-name {
                 font-size: 32px;
             }
-            .room-details {
-                font-size: 16px;
-            }
             .current-time {
                 font-size: 48px;
             }
@@ -1119,20 +1103,6 @@ $currentHour = (int)date('G');
             <!-- Room Header -->
             <div class="room-header">
                 <h1 class="room-name"><?php echo e($room['name']); ?></h1>
-                <div class="room-details">
-                    <div class="room-detail-item">
-                        <span>👥</span>
-                        <span>Capacity: 8</span>
-                    </div>
-                    <div class="room-detail-item">
-                        <span>🖥️</span>
-                        <span>4K Display</span>
-                    </div>
-                    <div class="room-detail-item">
-                        <span>📹</span>
-                        <span>Video Conference</span>
-                    </div>
-                </div>
             </div>
 
             <?php if ($isAvailable): ?>
