@@ -6,7 +6,7 @@
  * Usage: /public/tablet.php?room_id=1
  *
  * @package ConferenceBooking
- * @version 2.0.0 - Hybrid Modern Pro
+ * @version 2.1.0 - Hybrid Modern Pro with Night Mode
  */
 
 require_once __DIR__ . '/../config/config.php';
@@ -87,6 +87,70 @@ $currentHour = (int)date('G');
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            /* Light mode colors */
+            --bg-gradient-available-1: #10B981;
+            --bg-gradient-available-2: #34D399;
+            --bg-gradient-available-3: #6EE7B7;
+            --bg-gradient-occupied-1: #EF4444;
+            --bg-gradient-occupied-2: #F87171;
+            --bg-gradient-occupied-3: #FCA5A5;
+
+            --card-bg: #ffffff;
+            --card-text: #111827;
+            --card-text-secondary: #6B7280;
+            --card-text-light: #9CA3AF;
+
+            --status-available-bg: #D1FAE5;
+            --status-available-text: #065F46;
+            --status-occupied-bg: #FEE2E2;
+            --status-occupied-text: #991B1B;
+
+            --meeting-info-bg: linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%);
+            --next-meeting-bg: #F9FAFB;
+
+            --input-bg: #ffffff;
+            --input-border: #E5E7EB;
+            --input-text: #111827;
+
+            --timeline-border: #E5E7EB;
+            --timeline-label: #9CA3AF;
+
+            --modal-bg: #ffffff;
+        }
+
+        body.night-mode {
+            /* Dark mode colors */
+            --bg-gradient-available-1: #065F46;
+            --bg-gradient-available-2: #047857;
+            --bg-gradient-available-3: #059669;
+            --bg-gradient-occupied-1: #7F1D1D;
+            --bg-gradient-occupied-2: #991B1B;
+            --bg-gradient-occupied-3: #B91C1C;
+
+            --card-bg: #1F2937;
+            --card-text: #F9FAFB;
+            --card-text-secondary: #D1D5DB;
+            --card-text-light: #9CA3AF;
+
+            --status-available-bg: #064E3B;
+            --status-available-text: #A7F3D0;
+            --status-occupied-bg: #7F1D1D;
+            --status-occupied-text: #FCA5A5;
+
+            --meeting-info-bg: linear-gradient(135deg, #374151 0%, #4B5563 100%);
+            --next-meeting-bg: #374151;
+
+            --input-bg: #374151;
+            --input-border: #4B5563;
+            --input-text: #F9FAFB;
+
+            --timeline-border: #4B5563;
+            --timeline-label: #6B7280;
+
+            --modal-bg: #1F2937;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -96,12 +160,13 @@ $currentHour = (int)date('G');
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
             background: #000;
-            color: #111827;
+            color: var(--card-text);
             overflow: hidden;
             height: 100vh;
             width: 100vw;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.3s ease;
         }
 
         /* Background Gradient */
@@ -115,17 +180,17 @@ $currentHour = (int)date('G');
         }
 
         .tablet-container.available {
-            background: linear-gradient(135deg, #10B981 0%, #34D399 50%, #6EE7B7 100%);
+            background: linear-gradient(135deg, var(--bg-gradient-available-1) 0%, var(--bg-gradient-available-2) 50%, var(--bg-gradient-available-3) 100%);
         }
 
         .tablet-container.occupied {
-            background: linear-gradient(135deg, #EF4444 0%, #F87171 50%, #FCA5A5 100%);
+            background: linear-gradient(135deg, var(--bg-gradient-occupied-1) 0%, var(--bg-gradient-occupied-2) 50%, var(--bg-gradient-occupied-3) 100%);
         }
 
         /* Main Content Card */
         .main-card {
             flex: 1;
-            background: white;
+            background: var(--card-bg);
             border-radius: 24px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
             padding: 40px;
@@ -133,6 +198,7 @@ $currentHour = (int)date('G');
             flex-direction: column;
             position: relative;
             overflow: hidden;
+            transition: background-color 0.3s ease;
         }
 
         /* Status Badge */
@@ -150,13 +216,13 @@ $currentHour = (int)date('G');
         }
 
         .status-badge.available {
-            background: #D1FAE5;
-            color: #065F46;
+            background: var(--status-available-bg);
+            color: var(--status-available-text);
         }
 
         .status-badge.occupied {
-            background: #FEE2E2;
-            color: #991B1B;
+            background: var(--status-occupied-bg);
+            color: var(--status-occupied-text);
         }
 
         .status-dot {
@@ -187,7 +253,7 @@ $currentHour = (int)date('G');
         .room-name {
             font-size: 48px;
             font-weight: 700;
-            color: #111827;
+            color: var(--card-text);
             margin-bottom: 12px;
             line-height: 1.2;
         }
@@ -196,7 +262,7 @@ $currentHour = (int)date('G');
             display: flex;
             gap: 20px;
             font-size: 20px;
-            color: #6B7280;
+            color: var(--card-text-secondary);
         }
 
         .room-detail-item {
@@ -222,7 +288,7 @@ $currentHour = (int)date('G');
         .current-time {
             font-size: 72px;
             font-weight: 300;
-            color: #111827;
+            color: var(--card-text);
             margin-bottom: 20px;
             font-variant-numeric: tabular-nums;
             letter-spacing: -0.02em;
@@ -245,7 +311,7 @@ $currentHour = (int)date('G');
 
         /* Current Meeting Info */
         .meeting-info {
-            background: linear-gradient(135deg, #F9FAFB 0%, #F3F4F6 100%);
+            background: var(--meeting-info-bg);
             padding: 30px;
             border-radius: 16px;
             margin-bottom: 30px;
@@ -255,20 +321,20 @@ $currentHour = (int)date('G');
         .meeting-title {
             font-size: 32px;
             font-weight: 600;
-            color: #111827;
+            color: var(--card-text);
             margin-bottom: 12px;
         }
 
         .meeting-organizer {
             font-size: 24px;
-            color: #6B7280;
+            color: var(--card-text-secondary);
             margin-bottom: 16px;
         }
 
         .meeting-time {
             font-size: 28px;
             font-weight: 500;
-            color: #374151;
+            color: var(--card-text);
             margin-bottom: 20px;
         }
 
@@ -314,19 +380,19 @@ $currentHour = (int)date('G');
         .progress-minutes {
             font-size: 48px;
             font-weight: 700;
-            color: #111827;
+            color: var(--card-text);
             line-height: 1;
         }
 
         .progress-label {
             font-size: 18px;
-            color: #6B7280;
+            color: var(--card-text-secondary);
             margin-top: 4px;
         }
 
         /* Next Meeting */
         .next-meeting {
-            background: #F9FAFB;
+            background: var(--next-meeting-bg);
             padding: 24px;
             border-radius: 12px;
             margin-bottom: 30px;
@@ -336,7 +402,7 @@ $currentHour = (int)date('G');
         .next-meeting-label {
             font-size: 16px;
             font-weight: 600;
-            color: #6B7280;
+            color: var(--card-text-secondary);
             margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -345,13 +411,13 @@ $currentHour = (int)date('G');
         .next-meeting-title {
             font-size: 24px;
             font-weight: 600;
-            color: #111827;
+            color: var(--card-text);
             margin-bottom: 6px;
         }
 
         .next-meeting-time {
             font-size: 20px;
-            color: #6B7280;
+            color: var(--card-text-secondary);
         }
 
         /* Quick Book Buttons */
@@ -362,7 +428,7 @@ $currentHour = (int)date('G');
         .quick-book-label {
             font-size: 18px;
             font-weight: 600;
-            color: #6B7280;
+            color: var(--card-text-secondary);
             margin-bottom: 16px;
         }
 
@@ -402,13 +468,14 @@ $currentHour = (int)date('G');
         /* Timeline Sidebar */
         .timeline-sidebar {
             width: 280px;
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--card-bg);
             backdrop-filter: blur(10px);
             border-radius: 24px;
             padding: 30px 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
             display: flex;
             flex-direction: column;
+            transition: background-color 0.3s ease;
         }
 
         .timeline-header {
@@ -418,7 +485,7 @@ $currentHour = (int)date('G');
         .timeline-date {
             font-size: 16px;
             font-weight: 600;
-            color: #6B7280;
+            color: var(--card-text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.05em;
             margin-bottom: 8px;
@@ -427,13 +494,13 @@ $currentHour = (int)date('G');
         .timeline-title {
             font-size: 24px;
             font-weight: 700;
-            color: #111827;
+            color: var(--card-text);
         }
 
         .timeline-current-time {
             font-size: 36px;
             font-weight: 700;
-            color: #111827;
+            color: var(--card-text);
             margin-bottom: 24px;
             font-variant-numeric: tabular-nums;
         }
@@ -458,7 +525,7 @@ $currentHour = (int)date('G');
         .timeline-hour {
             position: relative;
             height: 60px;
-            border-left: 2px solid #E5E7EB;
+            border-left: 2px solid var(--timeline-border);
             padding-left: 20px;
             margin-bottom: 8px;
         }
@@ -473,7 +540,7 @@ $currentHour = (int)date('G');
             top: -8px;
             font-size: 14px;
             font-weight: 500;
-            color: #9CA3AF;
+            color: var(--timeline-label);
         }
 
         .timeline-hour.current .timeline-hour-label {
@@ -497,7 +564,7 @@ $currentHour = (int)date('G');
         .timeline-event-title {
             font-size: 13px;
             font-weight: 600;
-            color: #111827;
+            color: #1F2937;
             margin-bottom: 2px;
             white-space: nowrap;
             overflow: hidden;
@@ -506,7 +573,7 @@ $currentHour = (int)date('G');
 
         .timeline-event-time {
             font-size: 11px;
-            color: #6B7280;
+            color: #4B5563;
         }
 
         /* Modal */
@@ -529,7 +596,7 @@ $currentHour = (int)date('G');
         }
 
         .modal-content {
-            background: white;
+            background: var(--modal-bg);
             padding: 50px;
             border-radius: 24px;
             width: 90%;
@@ -537,12 +604,13 @@ $currentHour = (int)date('G');
             max-height: 85vh;
             overflow-y: auto;
             box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease;
         }
 
         .modal-header {
             font-size: 36px;
             font-weight: 700;
-            color: #111827;
+            color: var(--card-text);
             margin-bottom: 30px;
         }
 
@@ -554,7 +622,7 @@ $currentHour = (int)date('G');
             display: block;
             font-size: 18px;
             font-weight: 600;
-            color: #374151;
+            color: var(--card-text);
             margin-bottom: 8px;
         }
 
@@ -562,10 +630,12 @@ $currentHour = (int)date('G');
             width: 100%;
             padding: 16px;
             font-size: 18px;
-            border: 2px solid #E5E7EB;
+            border: 2px solid var(--input-border);
             border-radius: 12px;
             font-family: inherit;
             transition: all 0.3s ease;
+            background: var(--input-bg);
+            color: var(--input-text);
         }
 
         .form-control:focus {
@@ -608,6 +678,44 @@ $currentHour = (int)date('G');
         .btn-block {
             width: 100%;
             margin-bottom: 12px;
+        }
+
+        /* Night Mode Toggle */
+        .night-mode-toggle {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 1500;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .night-mode-toggle:hover {
+            background: rgba(0, 0, 0, 0.3);
+            transform: scale(1.05);
+        }
+
+        .night-mode-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .toggle-icon {
+            font-size: 28px;
+            transition: transform 0.3s ease;
+        }
+
+        body.night-mode .toggle-icon {
+            transform: rotate(180deg);
         }
 
         /* Screensaver */
@@ -687,6 +795,11 @@ $currentHour = (int)date('G');
     </style>
 </head>
 <body>
+    <!-- Night Mode Toggle -->
+    <button class="night-mode-toggle" id="nightModeToggle" aria-label="Toggle night mode">
+        <span class="toggle-icon">🌙</span>
+    </button>
+
     <!-- Main Container -->
     <div class="tablet-container <?php echo $isAvailable ? 'available' : 'occupied'; ?>">
 
@@ -911,6 +1024,26 @@ $currentHour = (int)date('G');
         const isAvailable = <?php echo $isAvailable ? 'true' : 'false'; ?>;
         let screensaverTimer;
 
+        // Night mode toggle
+        function toggleNightMode() {
+            document.body.classList.toggle('night-mode');
+            const isNightMode = document.body.classList.contains('night-mode');
+            localStorage.setItem('nightMode', isNightMode ? 'true' : 'false');
+
+            // Update toggle icon
+            const toggleIcon = document.querySelector('.toggle-icon');
+            toggleIcon.textContent = isNightMode ? '☀️' : '🌙';
+        }
+
+        // Load night mode preference
+        function loadNightModePreference() {
+            const nightMode = localStorage.getItem('nightMode');
+            if (nightMode === 'true') {
+                document.body.classList.add('night-mode');
+                document.querySelector('.toggle-icon').textContent = '☀️';
+            }
+        }
+
         // Update all clocks
         function updateTime() {
             const now = new Date();
@@ -987,6 +1120,12 @@ $currentHour = (int)date('G');
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            // Load night mode preference
+            loadNightModePreference();
+
+            // Night mode toggle event
+            document.getElementById('nightModeToggle').addEventListener('click', toggleNightMode);
+
             updateTime();
             setInterval(updateTime, 1000);
 
