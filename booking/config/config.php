@@ -52,7 +52,7 @@ define('DISPLAY_TIME_FORMAT', 'g:i A');
 define('DISPLAY_DATETIME_FORMAT', 'M d, Y g:i A');
 
 // Business Hours (24-hour format)
-define('BUSINESS_START_HOUR', 8);  // 8:00 AM
+define('BUSINESS_START_HOUR', 7);  // 7:00 AM
 define('BUSINESS_END_HOUR', 18);   // 6:00 PM
 
 // Default Settings (can be overridden in database)
